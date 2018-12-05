@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">CitizenHero</string>
+
+    <string name="facebook_app_id">2155621621370358</string>
+    <string name="fb_login_protocol_scheme">fb2155621621370358</string>
+
+    <string name="default_call">Escolha uma opção</string>
+
+    <string-array name="call_types">
+        <item>Iluminação</item>
+        <item>Capinagem</item>
+        <item>Estrutura prédios públicos</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+
+</resources>
