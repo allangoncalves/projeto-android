@@ -20,8 +20,6 @@ import java.io.IOException;
 
 public class FormActivity extends AppCompatActivity {
 
-    private Gson gson = new GsonBuilder().create();
-
     RestClient httpClient = new RestClient();
 
 
@@ -66,12 +64,11 @@ public class FormActivity extends AppCompatActivity {
             call.setStreet(getString(edtStreet));
             call.setUserId(Long.parseLong(profile.getId()));
 
-            String json_obj = gson.toJson(call);
-            Log.d("perf", "coe");
             try {
-                httpClient.doPostCall(json_obj);
+                httpClient.doPostCall(call);
+                finish();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d("post", "DA PRA PEGAR");
             }
         }
         else{

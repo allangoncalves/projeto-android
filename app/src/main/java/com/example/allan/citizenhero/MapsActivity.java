@@ -1,5 +1,7 @@
 package com.example.allan.citizenhero;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -10,9 +12,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    private CallDTO myCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +30,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        this.myCall = (CallDTO) getIntent().getSerializableExtra("call");
     }
 
 
@@ -38,9 +48,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocationName(this.myCall.getFullAddress(), 1);
+            if(!addresses.isEmpty()){
+                LatLng location = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
+                mMap.addMarker(new MarkerOptions().position(location).title(this.myCall.getComplement()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

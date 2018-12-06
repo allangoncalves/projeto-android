@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -35,57 +36,41 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        callbackManager = CallbackManager.Factory.create();
+        if(AccessToken.getCurrentAccessToken() == null){
+            callbackManager = CallbackManager.Factory.create();
+            loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.setReadPermissions("email");
+            loginButton.setReadPermissions("public_profile");
 
+            // Callback registration
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>(){
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Intent it = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(it);
+                }
 
+                @Override
+                public void onCancel() {
+                    // App code
+                }
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
-        loginButton.setReadPermissions("public_profile");
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>(){
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Profile profile = Profile.getCurrentProfile();
-                Log.d("perf", profile.getId());
-                Log.d("perf", profile.getName());
-                Log.d("perf", profile.getProfilePictureUri(100, 100).toString());
-
-//                try {
-//                    URL imageUrl = new URL(profile.getProfilePictureUri(100, 100).toString());
-//                    Bitmap bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-                Intent it = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(it);
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                finish();
-            }
-        });
+                @Override
+                public void onError(FacebookException exception) {
+                    // App code
+                    finish();
+                }
+            });
+        }
+        else{
+            Intent it = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(it);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        
     }
 }

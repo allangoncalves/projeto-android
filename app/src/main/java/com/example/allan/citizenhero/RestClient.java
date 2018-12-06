@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -25,20 +26,32 @@ public class RestClient {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
 
-    private Context c;
+    private OnGetCallsListener listener;
 
-    public void doPostCall(String json) throws IOException {
+    RestClient(){
 
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+    }
+
+    RestClient(OnGetCallsListener listener){
+        this.listener = listener;
+    }
+
+    public void doPostCall(final CallDTO call) throws IOException {
+
+        Gson gson = new GsonBuilder().create();
+
+        String json_obj = gson.toJson(call);
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json_obj);
 
         Request request = new Request.Builder()
                 .url(CALL_ENDPOINT)
                 .post(body)
                 .build();
 
-        Call call = httpClient.newCall(request);
+        Call httpCall = httpClient.newCall(request);
 
-        call.enqueue(new Callback() {
+        httpCall.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.d("post", "deu erro" + e.getMessage());
@@ -48,6 +61,7 @@ public class RestClient {
             public void onResponse(Response response) throws IOException {
                 if(response.isSuccessful()){
                     Log.d("post", "deu certo papai");
+                    listener.onNewCall(call);
                 }
             }
         });
@@ -56,9 +70,9 @@ public class RestClient {
     public void doGetCalls(Long id) throws IOException {
         Request request = new Request.Builder().url(CALL_ENDPOINT + String.valueOf(id)).build();
 
-        Call call = httpClient.newCall(request);
+        Call httpCall = httpClient.newCall(request);
 
-        call.enqueue(new Callback() {
+        httpCall.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
 
@@ -67,16 +81,20 @@ public class RestClient {
             @Override
             public void onResponse(Response response) throws IOException {
                 if(response.isSuccessful()){
-
+                    Gson gson = new GsonBuilder().create();
+                    ArrayList<CallDTO> calls = gson.fromJson(response.body().string(), new TypeToken<ArrayList<CallDTO>>(){}.getType());
+                    for(CallDTO call: calls){
+                        Log.d("get", call.toString());
+                    }
+                    listener.onUpdate(calls);
                 }
             }
         });
-//        return response.body().toString();
     }
 
-    public interface OnUpdateListView{
-        public void onUpdate(CallDTO call);
+    public interface OnGetCallsListener{
+        public void onUpdate(ArrayList<CallDTO> calls);
+        public void onNewCall(CallDTO call);
     }
-
 
 }

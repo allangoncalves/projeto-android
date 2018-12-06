@@ -37,6 +37,10 @@ public class CallDTO {
     public CallDTO() {
     }
 
+    public String getFullAddress(){
+        return "";
+    }
+
     public Long getUserId() {
         return userId;
     }
