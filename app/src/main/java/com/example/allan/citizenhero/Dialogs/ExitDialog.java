@@ -1,4 +1,4 @@
-package com.example.allan.citizenhero;
+package com.example.allan.citizenhero.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

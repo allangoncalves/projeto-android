@@ -1,10 +1,8 @@
 package com.example.allan.citizenhero;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.allan.citizenhero.DTOs.CallDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -27,13 +25,13 @@ public class RestClient {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
 
-    private OnGetCallsListener listener;
+    private OnRequestListener listener;
 
     RestClient(){
 
     }
 
-    RestClient(OnGetCallsListener listener){
+    public RestClient(OnRequestListener listener){
         this.listener = listener;
     }
 
@@ -87,16 +85,13 @@ public class RestClient {
                 if(response.isSuccessful()){
                     Gson gson = new GsonBuilder().create();
                     ArrayList<CallDTO> calls = gson.fromJson(response.body().string(), new TypeToken<ArrayList<CallDTO>>(){}.getType());
-                    for(CallDTO call: calls){
-                        Log.d("get", call.toString());
-                    }
                     listener.onUpdate(calls);
                 }
             }
         });
     }
 
-    public interface OnGetCallsListener{
+    public interface OnRequestListener{
         public void onUpdate(ArrayList<CallDTO> calls);
         public void onNewCall(CallDTO call);
     }

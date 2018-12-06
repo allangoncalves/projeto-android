@@ -1,14 +1,18 @@
-package com.example.allan.citizenhero;
+package com.example.allan.citizenhero.Activities;
 
+import com.example.allan.citizenhero.R;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.allan.citizenhero.DTOs.CallDTO;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -32,6 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         this.myCall = (CallDTO) getIntent().getExtras().getSerializable("call");
+        Log.d("post", this.myCall.getFullAddress());
     }
 
 
@@ -56,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(!addresses.isEmpty()){
                 LatLng location = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
                 mMap.addMarker(new MarkerOptions().position(location).title(this.myCall.getComplement()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder().target(location).zoom(15).build()));
             }
         } catch (IOException e) {
             e.printStackTrace();

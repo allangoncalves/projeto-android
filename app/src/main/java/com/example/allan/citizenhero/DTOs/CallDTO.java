@@ -1,4 +1,4 @@
-package com.example.allan.citizenhero;
+package com.example.allan.citizenhero.DTOs;
 
 import com.google.gson.annotations.SerializedName;
 

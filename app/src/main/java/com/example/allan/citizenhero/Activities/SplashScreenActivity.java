@@ -1,9 +1,12 @@
-package com.example.allan.citizenhero;
+package com.example.allan.citizenhero.Activities;
 
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.allan.citizenhero.Activities.LoginActivity;
+import com.example.allan.citizenhero.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
