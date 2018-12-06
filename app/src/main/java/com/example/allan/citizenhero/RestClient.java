@@ -1,6 +1,7 @@
 package com.example.allan.citizenhero;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class RestClient {
         this.listener = listener;
     }
 
-    public void doPostCall(final CallDTO call) throws IOException {
+    public void doPostCall(CallDTO call) throws IOException {
 
         Gson gson = new GsonBuilder().create();
 
@@ -60,9 +61,11 @@ public class RestClient {
             @Override
             public void onResponse(Response response) throws IOException {
                 if(response.isSuccessful()){
-                    Log.d("post", "deu certo papai");
-
-                    listener.onNewCall(call);
+                    Gson gson = new GsonBuilder().create();
+                    String str = response.body().string();
+                    Log.d("get", str);
+                    CallDTO responseCall = gson.fromJson(str, CallDTO.class);
+                    listener.onNewCall(responseCall);
                 }
             }
         });

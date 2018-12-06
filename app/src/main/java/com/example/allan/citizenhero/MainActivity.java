@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements ExitDialog.ExitLi
         setSupportActionBar(toolbar);
         Profile profile = Profile.getCurrentProfile();
 
-        Log.d("get", profile.getId());
-
         httpClient = new RestClient(this);
 
         this.imageView = (ImageView) findViewById(R.id.foto_fb);
@@ -147,10 +145,12 @@ public class MainActivity extends AppCompatActivity implements ExitDialog.ExitLi
     @Override
     public void onUpdate(ArrayList<CallDTO> calls) {
         adapter.updateAll(calls);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onNewCall(CallDTO call) {
         adapter.add(call);
+        adapter.notifyDataSetChanged();
     }
 }

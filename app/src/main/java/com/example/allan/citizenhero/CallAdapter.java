@@ -29,12 +29,12 @@ public class CallAdapter extends ArrayAdapter<CallDTO> {
     public void updateAll(Collection<? extends  CallDTO> callsFromApi){
         calls.clear();
         calls.addAll(callsFromApi);
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
     }
 
     public void add(CallDTO call){
         calls.add(call);
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
     }
 
     @Override
