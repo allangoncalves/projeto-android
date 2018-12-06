@@ -68,6 +68,7 @@
                 android:layout_marginRight="16dp"
                 android:clickable="true"
                 android:elevation="4dp"
+                android:backgroundTint="?attr/colorPrimary"
                 />
         </RelativeLayout>
     </LinearLayout>

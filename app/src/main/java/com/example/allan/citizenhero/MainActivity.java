@@ -58,11 +58,8 @@ public class MainActivity extends AppCompatActivity implements ExitDialog.ExitLi
 
         httpClient = new RestClient(this);
 
-        try {
-            httpClient.doGetCalls(Long.parseLong(profile.getId()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.imageView = (ImageView) findViewById(R.id.foto_fb);
+        Picasso.with(this).load(profile.getProfilePictureUri(100, 100)).into(imageView);
 
         this.listView = (ListView) findViewById(R.id.list_ultimas);
 
@@ -70,11 +67,16 @@ public class MainActivity extends AppCompatActivity implements ExitDialog.ExitLi
 
         this.listView.setAdapter(this.adapter);
 
+        try {
+            httpClient.doGetCalls(Long.parseLong(profile.getId()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.textView = findViewById(R.id.txt_nome_principal);
         this.textView.setText(profile.getName());
 
-        this.imageView = (ImageView) findViewById(R.id.foto_fb);
-        Picasso.with(this).load(profile.getProfilePictureUri(100, 100)).into(imageView);
+
 
         FloatingActionButton fb = (FloatingActionButton) findViewById(R.id.fab_novo);
         fb.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +90,13 @@ public class MainActivity extends AppCompatActivity implements ExitDialog.ExitLi
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                CallDTO call = adapter.getItem(position);
+                Log.d("get", "POXA KRA KD O MAPA" + call.getFullAddress());
+                Intent it = new Intent(MainActivity.this, MapsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("call", call);
+                it.putExtras(bundle);
+                startActivity(it);
             }
         });
     }

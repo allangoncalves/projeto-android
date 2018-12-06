@@ -2,7 +2,9 @@ package com.example.allan.citizenhero;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CallDTO {
+import java.io.Serializable;
+
+public class CallDTO implements Serializable {
 
     @SerializedName("user_id")
     private Long userId;
@@ -38,7 +40,7 @@ public class CallDTO {
     }
 
     public String getFullAddress(){
-        return "";
+        return this.street + ", " + this.neighborhood + ", " + this.city + " - " + this.state;
     }
 
     public Long getUserId() {
